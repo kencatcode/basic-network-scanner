@@ -1,0 +1,72 @@
+# Function to perform TCP Connect Scan
+function TcpConnectScan {
+    param (
+        [string]$Target
+    )
+    Write-Host "Performing TCP Connect Scan on $Target..."
+    
+    nmap -sT $Target
+}
+
+# Function to perform SYN Scan
+function SynScan {
+    param (
+        [string]$Target
+    )
+    Write-Host "Performing SYN Scan on $Target..."
+
+    nmap -sS $Target
+}
+
+# Function to perform OS Detection
+function OsDetection {
+    param (
+        [string]$Target
+    )
+    Write-Host "Performing OS Detection on $Target..."
+
+    nmap -O $Target
+}
+
+# Function to handle user input and scanning logic
+function SelectScanFunction {
+    # Take input for target (IP address, range, list, or subnet)
+    $target = Read-Host "Enter target IP address, range, list or subnet"
+
+    if (-not $target) {
+        Write-Host "No target provided. Exiting..."
+        exit
+    }
+
+    # Ask user for which scan to perform
+    Write-Host "Select scan function to perform:"
+    Write-Host "1. TCP Connect Scan"
+    Write-Host "2. SYN Scan"
+    Write-Host "3. OS Detection"
+    Write-Host "4. Exit"
+    
+    $choice = Read-Host "Enter choice (1-4)"
+
+    switch ($choice) {
+        1 {
+            TcpConnectScan $target
+        }
+        2 {
+            SynScan $target
+        }
+        3 {
+            OsDetection $target
+        }
+        4 {
+            Write-Host "Exiting script..."
+            exit
+        }
+        default {
+            Write-Host "Invalid choice, please choose a valid option."
+            SelectScanFunction
+        }
+    }
+}
+
+# Run the script
+SelectScanFunction
